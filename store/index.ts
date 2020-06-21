@@ -18,6 +18,9 @@ export const mutations = {
   },
   addApology(state, apology) {
     state.apologies.push(apology)
+  },
+  clearApology(state) {
+    state.apologies = []
   }
 };
 
@@ -47,6 +50,21 @@ export const actions = {
       .catch(error => {
         console.log('error : ' + error)
       })
+  },
+  addApology({commit}, apology) {
+    console.log(apology);
+    apologyRef
+      .add({
+        user: apology.user,
+        apologyText: apology.apologyText,
+      })
+      .then(function (docRef) {
+        console.log("Document written with ID: ", docRef.id);
+        commit('addApology', apology)
+      })
+      .catch(function (error) {
+        console.error("Error adding document: ", error);
+      });
   }
 }
 
