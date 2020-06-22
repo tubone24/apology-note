@@ -40,7 +40,7 @@
               >
                 <v-textarea
                   v-model="form.apologyText"
-                  :counter="2000"
+                  :counter="maxApologyTextLen"
                   label="反省文"
                   required
                 ></v-textarea>
@@ -59,6 +59,10 @@
             @click="addApology"
           >反省する
           </v-btn>
+          <v-progress-circular
+            :value="progress"
+            class="mr-4"
+          ></v-progress-circular>
         </v-card-actions>
       </v-card>
       <v-spacer/>
@@ -95,11 +99,13 @@
       Logo,
     },
     data() {
+      const maxApologyTextLen = 2000;
       const defaultForm = Object.freeze({
         user: '名無し',
         apologyText: ''
       });
       return {
+        maxApologyTextLen,
         form: Object.assign({}, defaultForm),
         headers: [
           {
@@ -137,6 +143,9 @@
           this.form.apologyText &&
           this.$store.getters.getUserName
         )
+      },
+      progress () {
+        return this.form.apologyText.length / this.maxApologyTextLen * 100
       },
     },
   }
