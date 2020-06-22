@@ -4,168 +4,59 @@
       <div class="text-center">
         <logo />
       </div>
-      <v-card>
-        <v-card-title class="headline">
-          反省文書いて成功をやる気スイッチを押す習慣をつけよう！
-        </v-card-title>
-        <v-card-text>
-          <p>
-            人間とはよき習慣を身に着けることがとても大変な生き物です。<br />
-            例えば毎日英語学習しようと思っても途中で遊んでしまい、長続きしません。<br />
-            そこで、何もできなかった日に反省文を書くことで自身に罰を与え、継続力を鍛え上げることをサポートするのがこのアプリです。<br />
-            言い訳の前に反省文書いて自分のやる気スイッチを押す習慣をつけよう！
-          </p>
-          <v-card-subtitle>
-            自分を破壊する一歩手前の負荷が、自分を強くしてくれる。<br />
-            <small>-ニーチェ</small>
-          </v-card-subtitle>
-          <hr class="my-3" />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" @click="login">
-            Twitterでログイン
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-      <v-spacer/>
-      <v-card>
-        <v-form ref="form" @submit.prevent="addApology">
-          <v-container>
-            <v-row>
-              <v-col
-                cols="48"
-                md="12"
-              >
-                <v-textarea
-                  v-model="form.apologyText"
-                  :counter="maxApologyTextLen"
-                  label="反省文"
-                  required
-                ></v-textarea>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-form>
-        <v-card-actions>
-          <v-spacer/>
-          <v-list-item class="grow">
-            <v-list-item-avatar color="grey darken-3">
-              <v-img
-                class="elevation-6"
-                :src="$store.getters.getUserPhotoUrl"
-              ></v-img>
-            </v-list-item-avatar>
-
-            <v-list-item-content>
-              <v-list-item-title>{{
-                $store.getters.getUserName
-              }}</v-list-item-title>
-            </v-list-item-content>
-
-            <v-row
-              align="center"
-              justify="end"
-            >
-              <v-btn text @click="resetForm">Cancel</v-btn>
-              <v-btn
-                :disabled="!formIsValid"
-                text
-                color="secondary"
-                type="submit"
-                @click="addApology"
-              >反省する
-              </v-btn>
-              <v-progress-circular
-                :value="progress"
-                class="mr-4"
-              ></v-progress-circular>
-            </v-row>
-          </v-list-item>
-        </v-card-actions>
-      </v-card>
-      <v-spacer/>
-      <v-data-table
-        :headers="headers"
-        :items="$store.getters.getApologies"
-        item-key="user"
-        class="elevation-1"
-      >
-      </v-data-table>
-      <!--      <table class="table is-narrow">-->
-      <!--        <thead>-->
-      <!--        <tr>-->
-      <!--          <th>date</th>-->
-      <!--          <th>memo</th>-->
-      <!--        </tr>-->
-      <!--        </thead>-->
-      <!--        <tbody>-->
-      <!--        <tr v-for="apology in $store.getters.getApologies" :key="apology.apology">-->
-      <!--          <td>{{apology.date}}</td>-->
-      <!--          <td>{{apology.apologyText}}</td>-->
-      <!--        </tr>-->
-      <!--        </tbody>-->
-      <!--      </table>-->
+      <Header />
+      <v-spacer />
+      <apology-note />
+      <v-spacer />
+      <v-container fluid fill-height>
+        <v-layout
+          wrap
+          justify-space-around
+          align-center
+          align-content-center
+          offset-lg2
+        >
+          <v-flex
+            v-for="apology in apologies"
+            :key="apology.apologyText"
+            xs12
+            sm8
+            md6
+          >
+            <apology-card
+              :user="apology.user"
+              :user-photo-url="apology.userPhotoUrl"
+              :apology-note="apology.apologyText"
+              :date-time="apology.dateTime"
+            />
+            <v-spacer />
+          </v-flex>
+        </v-layout>
+      </v-container>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
-  import Logo from '~/components/Logo.vue'
+import Logo from '~/components/Logo.vue'
+import Header from '~/components/Header.vue'
+import ApologyNote from '~/components/ApologyNote.vue'
+import ApologyCard from '~/components/ApologyCard.vue'
 
-  export default {
-    components: {
-      Logo,
-    },
-    data() {
-      const maxApologyTextLen = 2000;
-      const defaultForm = Object.freeze({
-        user: '名無し',
-        apologyText: ''
-      });
-      return {
-        maxApologyTextLen,
-        form: Object.assign({}, defaultForm),
-        headers: [
-          {
-            text: 'お名前',
-            align: 'start',
-            sortable: false,
-            value: 'user',
-          },
-          {text: '反省文', value: 'apologyText'},
-        ]
-      }
-    },
-    methods: {
-      login() {
-        console.log('login');
-        this.$store.dispatch('login')
-      },
-      addApology() {
-        const apologyText = this.form.apologyText;
-        const user = this.$store.getters.getUserName || this.form.user;
-        this.$store.dispatch('addApology', {apologyText, user});
-        this.resetForm();
-      },
-      resetForm() {
-        this.form = Object.assign({}, this.defaultForm);
-        this.$refs.form.reset();
-      },
-    },
-    created() {
-      this.$store.dispatch('fetchApologies')
-    },
-    computed: {
-      formIsValid() {
-        return (
-          this.form.apologyText &&
-          this.$store.getters.getUserName
-        )
-      },
-      progress () {
-        return this.form.apologyText.length / this.maxApologyTextLen * 100
-      },
-    },
-  }
+export default {
+  components: {
+    Logo,
+    Header,
+    ApologyNote,
+    ApologyCard,
+  },
+  data() {
+    return {
+      apologies: this.$store.getters.getApologies,
+    }
+  },
+  created() {
+    this.$store.dispatch('fetchApologies')
+  },
+}
 </script>

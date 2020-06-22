@@ -1,14 +1,14 @@
 import firebase from '~/plugins/firebase'
 
-const db = firebase.firestore();
-const apologyRef = db.collection('apologies');
+const db = firebase.firestore()
+const apologyRef = db.collection('apologies')
 
 export const state = () => ({
   userUid: '',
   userName: '',
   userPhotoUrl: '',
   apologies: [],
-});
+})
 
 export const mutations = {
   setUserUid(state, userUid) {
@@ -25,12 +25,12 @@ export const mutations = {
   },
   clearApology(state) {
     state.apologies = []
-  }
-};
+  },
+}
 
 export const actions = {
   login({ commit }) {
-    console.log('login action');
+    console.log('login action')
     const provider = new firebase.auth.TwitterAuthProvider()
     firebase
       .auth()
@@ -48,12 +48,12 @@ export const actions = {
         console.log('error : ' + errorCode)
     });
   },
-  fetchApologies({commit}) {
+  fetchApologies({ commit }) {
     apologyRef
       .get()
-      .then(res => {
+      .then((res) => {
         res.forEach((doc) => {
-          console.log('success : ' + `${doc.id} => ${doc.data()}`);
+          console.log('success : ' + `${doc.id} => ${doc.data()}`)
           commit('addApology', doc.data())
         })
       })
@@ -66,7 +66,9 @@ export const actions = {
     apologyRef
       .add({
         user: apology.user,
+        userPhotoUrl: apology.userPhotoUrl,
         apologyText: apology.apologyText,
+        dateTime: apology.dateTime,
       })
       .then(function (docRef) {
         console.log('Document written with ID: ', docRef.id)
@@ -74,8 +76,8 @@ export const actions = {
       })
       .catch(function (error) {
         console.error('Error adding document: ', error)
-      });
-  }
+      })
+  },
 }
 
 export const getters = {
@@ -91,5 +93,5 @@ export const getters = {
   getApologies(state) {
     console.log(state.apologies)
     return state.apologies
-  }
+  },
 }
