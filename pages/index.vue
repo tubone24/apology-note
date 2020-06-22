@@ -2,7 +2,7 @@
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
       <div class="text-center">
-        <logo/>
+        <logo />
       </div>
       <v-card>
         <v-card-title class="headline">
@@ -10,19 +10,19 @@
         </v-card-title>
         <v-card-text>
           <p>
-            人間とはよき習慣を身に着けることがとても大変な生き物です。<br/>
-            例えば毎日英語学習しようと思っても途中で遊んでしまい、長続きしません。<br/>
-            そこで、何もできなかった日に反省文を書くことで自身に罰を与え、継続力を鍛え上げることをサポートするのがこのアプリです。<br/>
+            人間とはよき習慣を身に着けることがとても大変な生き物です。<br />
+            例えば毎日英語学習しようと思っても途中で遊んでしまい、長続きしません。<br />
+            そこで、何もできなかった日に反省文を書くことで自身に罰を与え、継続力を鍛え上げることをサポートするのがこのアプリです。<br />
             言い訳の前に反省文書いて自分のやる気スイッチを押す習慣をつけよう！
           </p>
-          <p>
-            自分を破壊する一歩手前の負荷が、自分を強くしてくれる。<br/>
+          <v-card-subtitle>
+            自分を破壊する一歩手前の負荷が、自分を強くしてくれる。<br />
             <small>-ニーチェ</small>
-          </p>
-          <hr class="my-3"/>
+          </v-card-subtitle>
+          <hr class="my-3" />
         </v-card-text>
         <v-card-actions>
-          <v-spacer/>
+          <v-spacer />
           <v-btn color="primary" @click="login">
             Twitterでログイン
           </v-btn>
@@ -30,7 +30,6 @@
       </v-card>
       <v-spacer/>
       <v-card>
-        <p class="title is-1 is-spaced">あなたの名前: {{ $store.getters.getUserName }}</p>
         <v-form ref="form" @submit.prevent="addApology">
           <v-container>
             <v-row>
@@ -50,19 +49,39 @@
         </v-form>
         <v-card-actions>
           <v-spacer/>
-          <v-btn text @click="resetForm">Cancel</v-btn>
-          <v-btn
-            :disabled="!formIsValid"
-            text
-            color="secondary"
-            type="submit"
-            @click="addApology"
-          >反省する
-          </v-btn>
-          <v-progress-circular
-            :value="progress"
-            class="mr-4"
-          ></v-progress-circular>
+          <v-list-item class="grow">
+            <v-list-item-avatar color="grey darken-3">
+              <v-img
+                class="elevation-6"
+                :src="$store.getters.getUserPhotoUrl"
+              ></v-img>
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title>{{
+                $store.getters.getUserName
+              }}</v-list-item-title>
+            </v-list-item-content>
+
+            <v-row
+              align="center"
+              justify="end"
+            >
+              <v-btn text @click="resetForm">Cancel</v-btn>
+              <v-btn
+                :disabled="!formIsValid"
+                text
+                color="secondary"
+                type="submit"
+                @click="addApology"
+              >反省する
+              </v-btn>
+              <v-progress-circular
+                :value="progress"
+                class="mr-4"
+              ></v-progress-circular>
+            </v-row>
+          </v-list-item>
         </v-card-actions>
       </v-card>
       <v-spacer/>
