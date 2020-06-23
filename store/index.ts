@@ -2,6 +2,7 @@ import firebase from '~/plugins/firebase'
 
 const db = firebase.firestore()
 const apologyRef = db.collection('apologies')
+const usersRef = db.collection('users')
 
 export const state = () => ({
   userUid: '',
@@ -42,6 +43,16 @@ export const actions = {
         commit('setUserUid', user.uid)
         commit('setUserName', user.displayName)
         commit('setUserPhotoUrl', user.photoURL.replace('_normal', ''))
+        usersRef
+          .doc(user.uid)
+          .set({
+            name: user.displayName,
+            userPhotoUrl: user.photoURL.replace('_normal', ''),
+          })
+          .catch(function (error) {
+            const errorCode = error.code
+            console.log('error : ' + errorCode)
+          })
       })
       .catch(function (error) {
         const errorCode = error.code
