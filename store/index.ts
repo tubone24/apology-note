@@ -24,6 +24,9 @@ export const mutations = {
   addApology(state, apology) {
     state.apologies.push(apology)
   },
+  changeApology(state, apology, index) {
+    state.apologies.splice(index, 1, apology)
+  },
   clearApology(state) {
     state.apologies = []
   },
@@ -65,7 +68,9 @@ export const actions = {
       .then((res) => {
         res.forEach((doc) => {
           console.log('success : ' + `${doc.id} => ${doc.data()}`)
-          commit('addApology', doc.data())
+          const data = doc.data()
+          data.id = doc.id
+          commit('addApology', data)
         })
       })
       .catch(error => {
@@ -87,6 +92,25 @@ export const actions = {
       })
       .catch(function (error) {
         console.error('Error adding document: ', error)
+      })
+  },
+  addStar({ commit }, params) {
+    console.log("aaaa addstar")
+    console.log(params)
+    apologyRef
+      .doc(params.apologyId)
+      .set(
+        {
+          stars: params.stars,
+        },
+        { merge: true }
+      )
+      .then(function () {
+        console.log('change')
+        commit('changeApology', params, params.index)
+      })
+      .catch(function (error) {
+        console.error('Error adding star: ', error)
       })
   },
 }

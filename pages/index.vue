@@ -17,17 +17,20 @@
           offset-lg2
         >
           <v-flex
-            v-for="apology in apologies"
-            :key="apology.apologyText"
+            v-for="(apology, index) in apologies"
+            :key="apology.id"
             xs12
             sm8
             md6
           >
             <apology-card
+              :id="apology.id"
+              :index="index"
               :user="apology.user"
               :user-photo-url="apology.userPhotoUrl"
               :apology-note="apology.apologyText"
               :date-time="apology.dateTime"
+              :stars="apology.stars"
             />
             <v-spacer />
           </v-flex>

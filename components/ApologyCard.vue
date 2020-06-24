@@ -21,6 +21,16 @@
           <v-list-item-title>{{ user }}</v-list-item-title>
         </v-list-item-content>
 
+        <v-spacer />
+        <v-row align="center" justify="end">
+          <v-btn class="ma-2" text icon color="yellow lighten-2" :disabled="!canStar" @click="addStar">
+            <v-icon class="mr-1">mdi-star</v-icon>
+          </v-btn>
+          <span class="subheading mr-2">{{ stars.length }}</span>
+        </v-row>
+        <v-row align="center" justify="end">
+          <v-icon class="mr-1">mdi-share-variant</v-icon>
+        </v-row>
         <v-row align="center" justify="end">
           <v-icon class="mr-1">mdi-calendar-clock</v-icon>
           <span class="subheading mr-2">{{ dateTime }}</span>
@@ -47,10 +57,33 @@ export default {
     }
   },
   props: {
+    id: String,
+    index: Number,
     user: String,
     userPhotoUrl: String,
     apologyNote: String,
     dateTime: String,
+    stars: [],
+  },
+  computed: {
+    canStar() {
+      console.log("canStar")
+      return !!this.$store.getters.getUserUid
+    },
+  },
+  methods: {
+    addStar() {
+      console.log("addStar")
+      const userId = this.$store.getters.getUserUid
+      const stars = this.stars
+      const index = this.index
+      //stars.push(userId)
+      this.stars.push(userId)
+      console.log(stars)
+      const apologyId = this.id
+      console.log("dispatchaddStar")
+      this.$store.dispatch('addStar', { apologyId, stars, index })
+    },
   },
 }
 </script>
