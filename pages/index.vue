@@ -17,7 +17,7 @@
           offset-lg2
         >
           <v-flex
-            v-for="(apology, index) in apologies"
+            v-for="(apology, index) in this.apologies"
             :key="apology.id"
             xs12
             sm8
@@ -31,6 +31,7 @@
               :apology-note="apology.apologyText"
               :date-time="apology.dateTime"
               :stars="apology.stars"
+              @addStar="addStar"
             />
             <v-spacer />
           </v-flex>
@@ -53,13 +54,34 @@ export default {
     ApologyNote,
     ApologyCard,
   },
-  data() {
-    return {
-      apologies: this.$store.getters.getApologies,
-    }
+  computed: {
+    apologies() {
+      return this.$store.getters.getApologies
+    },
   },
   created() {
     this.$store.dispatch('fetchApologies')
+  },
+  methods: {
+    addStar(index) {
+      console.log('addStar')
+      const userId = this.$store.getters.getUserUid
+      const newStar = this.$store.getters.getApologies[index].stars.slice()
+      console.log('id')
+      console.log(this.$store.getters.getApologies[index].id)
+      console.log(newStar)
+      newStar.push(userId)
+      this.$store.dispatch('addStar', {
+        apologyId: this.$store.getters.getApologies[index].id,
+        apologyText: this.$store.getters.getApologies[index].apologyText,
+        dateTime: this.$store.getters.getApologies[index].dateTime,
+        user: this.$store.getters.getApologies[index].user,
+        userPhotoUrl: this.$store.getters.getApologies[index].userPhotoUrl,
+        stars: newStar,
+        index,
+      })
+      //this.$store.dispatch('fetchApologies')
+    },
   },
 }
 </script>

@@ -67,22 +67,12 @@ export default {
   },
   computed: {
     canStar() {
-      console.log("canStar")
       return !!this.$store.getters.getUserUid
     },
   },
   methods: {
     addStar() {
-      console.log("addStar")
-      const userId = this.$store.getters.getUserUid
-      const stars = this.stars
-      const index = this.index
-      //stars.push(userId)
-      this.stars.push(userId)
-      console.log(stars)
-      const apologyId = this.id
-      console.log("dispatchaddStar")
-      this.$store.dispatch('addStar', { apologyId, stars, index })
+      this.$emit('addStar', this.index)
     },
   },
 }

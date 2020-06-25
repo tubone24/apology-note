@@ -25,7 +25,16 @@ export const mutations = {
     state.apologies.push(apology)
   },
   changeApology(state, apology, index) {
-    state.apologies.splice(index, 1, apology)
+    console.log('chage apology')
+    console.log(apology)
+    state.apologies[index] = {
+      apologyText: apology.apologyText,
+      dateTime: apology.dateTime,
+      id: apology.apologyId,
+      user: apology.user,
+      userPhotoUrl: apology.userPhotoUrl,
+      stars: apology.stars,
+    }
   },
   clearApology(state) {
     state.apologies = []
@@ -63,6 +72,7 @@ export const actions = {
     });
   },
   fetchApologies({ commit }) {
+    commit('clearApology')
     apologyRef
       .get()
       .then((res) => {
