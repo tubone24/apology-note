@@ -18,7 +18,7 @@
         >
           <v-flex
             v-for="(apology, index) in apologies"
-            :key="apology"
+            :key="apology.id"
             xs12
             sm8
             md6

@@ -1,5 +1,8 @@
 <template>
-  <v-card :color="color" dark>
+  <v-card
+    :color="this.$store.getters.getApologies[this.index].color"
+    dark
+  >
     <v-card-title>
       <v-icon large left>
         mdi-emoticon-dead
@@ -8,17 +11,17 @@
     </v-card-title>
 
     <v-card-text class="headline font-weight-bold">
-      {{ apologyNote }}
+      {{ this.$store.getters.getApologies[this.index].apologyText }}
     </v-card-text>
 
     <v-card-actions>
       <v-list-item class="grow">
         <v-list-item-avatar color="grey darken-3">
-          <v-img class="elevation-6" :src="userPhotoUrl"></v-img>
+          <v-img class="elevation-6" :src="this.$store.getters.getApologies[this.index].userPhotoUrl"></v-img>
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title>{{ user }}</v-list-item-title>
+          <v-list-item-title>{{ this.$store.getters.getApologies[this.index].user }}</v-list-item-title>
         </v-list-item-content>
 
         <v-spacer />
@@ -26,14 +29,16 @@
           <v-btn class="ma-2" text icon color="yellow lighten-2" :disabled="!canStar" @click="addStar">
             <v-icon class="mr-1">mdi-star</v-icon>
           </v-btn>
-          <span class="subheading mr-2">{{ stars.length || 0 }}</span>
+          <star-num v-if="!rerender" :index="index" />
         </v-row>
         <v-row align="center" justify="end">
           <v-icon class="mr-1">mdi-share-variant</v-icon>
         </v-row>
         <v-row align="center" justify="end">
           <v-icon class="mr-1">mdi-calendar-clock</v-icon>
-          <span class="subheading mr-2">{{ dateTime }}</span>
+          <span class="subheading mr-2">{{
+            this.$store.getters.getApologies[this.index].dateTime
+          }}</span>
         </v-row>
       </v-list-item>
     </v-card-actions>
@@ -41,39 +46,41 @@
 </template>
 
 <script>
+import StarNum from '~/components/StarNum.vue'
 export default {
+  components: {
+    StarNum,
+  },
   data() {
-    const rangeRndm = (min, max) => {
-      if (max) {
-        return (Math.random() * (max - min + 1) + min) | 0
-      } else {
-        return (Math.random() * min) | 0
-      }
-    }
-    const randomColor =
-      'hsl(' + rangeRndm(0, 360) + ', 100%, ' + rangeRndm(25, 75) + '%)'
     return {
-      randomColor,
+      rerender: 0,
     }
   },
   props: {
     id: String,
     index: Number,
-    user: String,
-    userPhotoUrl: String,
-    apologyNote: String,
-    dateTime: String,
-    stars: [],
-    color: String,
+    // user: String,
+    // userPhotoUrl: String,
+    // apologyNote: String,
+    // dateTime: String,
+    // stars: [],
+    // color: String,
   },
   computed: {
     canStar() {
       return !!this.$store.getters.getUserUid
     },
+    // stars() {
+    //   return this.$store.getters.getApologies[this.index].stars.length
+    // },
   },
   methods: {
     addStar() {
+      this.rerender = 1
       this.$emit('addStar', this.index)
+      setTimeout(() => {
+        this.rerender = 0
+      }, '3000')
     },
   },
 }

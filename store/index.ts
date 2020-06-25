@@ -140,7 +140,11 @@ export const actions = {
       )
       .then(function () {
         console.log('change')
-        commit('changeApology', { ...params, updateDateTime }, params.index)
+        commit(
+          'changeApology',
+          { ...params, updateDateTime },
+          params.index
+        )
       })
       .catch(function (error) {
         console.error('Error adding star: ', error)
