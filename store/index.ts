@@ -1,3 +1,4 @@
+import moment from 'moment'
 import firebase from '~/plugins/firebase'
 
 const db = firebase.firestore()
@@ -34,6 +35,7 @@ export const mutations = {
       user: apology.user,
       userPhotoUrl: apology.userPhotoUrl,
       stars: apology.stars,
+      updateDateTime: apology.updateDateTime,
     }
   },
   clearApology(state) {
@@ -69,7 +71,7 @@ export const actions = {
       .catch(function (error) {
         const errorCode = error.code
         console.log('error : ' + errorCode)
-    });
+      })
   },
   fetchApologies({ commit }) {
     commit('clearApology')
@@ -88,36 +90,57 @@ export const actions = {
       })
   },
   addApology({ commit }, apology) {
-    console.log(apology);
+    const updateDateTime = moment().format('YYYY-MM-DD hh:mm:ss')
+    const rangeRndm = (min, max) => {
+      if (max) {
+        return (Math.random() * (max - min + 1) + min) | 0
+      } else {
+        return (Math.random() * min) | 0
+      }
+    }
+    const randomColor =
+      'hsl(' + rangeRndm(0, 360) + ', 100%, ' + rangeRndm(25, 75) + '%)'
+    console.log(apology)
     apologyRef
       .add({
         user: apology.user,
         userPhotoUrl: apology.userPhotoUrl,
         apologyText: apology.apologyText,
         dateTime: apology.dateTime,
+        updateDateTime,
+        stars: [],
+        color: randomColor,
       })
       .then(function (docRef) {
         console.log('Document written with ID: ', docRef.id)
-        commit('addApology', apology)
+        commit('addApology', {
+          ...apology,
+          updateDateTime,
+          stars: [],
+          color: randomColor,
+          id: docRef.id,
+        })
       })
       .catch(function (error) {
         console.error('Error adding document: ', error)
       })
   },
   addStar({ commit }, params) {
-    console.log("aaaa addstar")
+    const updateDateTime = moment().format('YYYY-MM-DD hh:mm:ss')
+    console.log('aaaa addstar')
     console.log(params)
     apologyRef
       .doc(params.apologyId)
       .set(
         {
           stars: params.stars,
+          updateDateTime,
         },
         { merge: true }
       )
       .then(function () {
         console.log('change')
-        commit('changeApology', params, params.index)
+        commit('changeApology', { ...params, updateDateTime }, params.index)
       })
       .catch(function (error) {
         console.error('Error adding star: ', error)

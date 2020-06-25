@@ -1,5 +1,5 @@
 <template>
-  <v-card :color="randomColor" dark>
+  <v-card :color="color" dark>
     <v-card-title>
       <v-icon large left>
         mdi-emoticon-dead
@@ -26,7 +26,7 @@
           <v-btn class="ma-2" text icon color="yellow lighten-2" :disabled="!canStar" @click="addStar">
             <v-icon class="mr-1">mdi-star</v-icon>
           </v-btn>
-          <span class="subheading mr-2">{{ stars.length }}</span>
+          <span class="subheading mr-2">{{ stars.length || 0 }}</span>
         </v-row>
         <v-row align="center" justify="end">
           <v-icon class="mr-1">mdi-share-variant</v-icon>
@@ -64,6 +64,7 @@ export default {
     apologyNote: String,
     dateTime: String,
     stars: [],
+    color: String,
   },
   computed: {
     canStar() {

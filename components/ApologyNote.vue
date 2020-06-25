@@ -79,7 +79,6 @@ export default {
       return this.form.apologyText && this.$store.getters.getUserName
     },
     progress() {
-      console.log(this.form.apologyText)
       return (this.form.apologyText.length / this.maxApologyTextLen) * 100
     },
   },
@@ -91,6 +90,7 @@ export default {
       const dateTime = moment().format('YYYY-MM-DD hh:mm:ss')
       this.$store.dispatch('addApology', { apologyText, user, userPhotoUrl, dateTime })
       this.resetForm()
+      // this.$store.dispatch('fetchApologies')
     },
     resetForm() {
       this.form.apologyText = ''

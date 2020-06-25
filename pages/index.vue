@@ -17,8 +17,8 @@
           offset-lg2
         >
           <v-flex
-            v-for="(apology, index) in this.apologies"
-            :key="apology.id"
+            v-for="(apology, index) in apologies"
+            :key="apology"
             xs12
             sm8
             md6
@@ -31,6 +31,7 @@
               :apology-note="apology.apologyText"
               :date-time="apology.dateTime"
               :stars="apology.stars"
+              :color="apology.color"
               @addStar="addStar"
             />
             <v-spacer />
@@ -62,25 +63,30 @@ export default {
   created() {
     this.$store.dispatch('fetchApologies')
   },
+  mounted() {
+    this.$store.subscribeAction((action, state) => {
+      if (action.type === 'addStar') {
+        console.log('change addStar', state)
+      }
+    })
+  },
   methods: {
     addStar(index) {
       console.log('addStar')
       const userId = this.$store.getters.getUserUid
       const newStar = this.$store.getters.getApologies[index].stars.slice()
-      console.log('id')
-      console.log(this.$store.getters.getApologies[index].id)
-      console.log(newStar)
       newStar.push(userId)
+      const newStarSet = Array.from(new Set(newStar))
       this.$store.dispatch('addStar', {
         apologyId: this.$store.getters.getApologies[index].id,
         apologyText: this.$store.getters.getApologies[index].apologyText,
         dateTime: this.$store.getters.getApologies[index].dateTime,
         user: this.$store.getters.getApologies[index].user,
         userPhotoUrl: this.$store.getters.getApologies[index].userPhotoUrl,
-        stars: newStar,
+        stars: newStarSet,
         index,
       })
-      //this.$store.dispatch('fetchApologies')
+      // this.$store.dispatch('fetchApologies')
     },
   },
 }
