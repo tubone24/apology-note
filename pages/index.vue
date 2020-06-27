@@ -84,6 +84,7 @@ export default {
         user: this.$store.getters.getApologies[index].user,
         userPhotoUrl: this.$store.getters.getApologies[index].userPhotoUrl,
         stars: newStarSet,
+        color: this.$store.getters.getApologies[index].color,
         index,
       })
       // this.$store.dispatch('fetchApologies')

@@ -59,20 +59,11 @@ export default {
   props: {
     id: String,
     index: Number,
-    // user: String,
-    // userPhotoUrl: String,
-    // apologyNote: String,
-    // dateTime: String,
-    // stars: [],
-    // color: String,
   },
   computed: {
     canStar() {
       return !!this.$store.getters.getUserUid
     },
-    // stars() {
-    //   return this.$store.getters.getApologies[this.index].stars.length
-    // },
   },
   methods: {
     addStar() {
@@ -80,7 +71,7 @@ export default {
       this.$emit('addStar', this.index)
       setTimeout(() => {
         this.rerender = 0
-      }, '3000')
+      }, 1000)
     },
   },
 }

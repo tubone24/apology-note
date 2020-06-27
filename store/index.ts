@@ -28,7 +28,16 @@ export const mutations = {
   changeApology(state, apology, index) {
     console.log('chage apology')
     console.log(apology)
-    state.apologies[index] = {
+    // state.apologies[index] = {
+    //   apologyText: apology.apologyText,
+    //   dateTime: apology.dateTime,
+    //   id: apology.apologyId,
+    //   user: apology.user,
+    //   userPhotoUrl: apology.userPhotoUrl,
+    //   stars: apology.stars,
+    //   updateDateTime: apology.updateDateTime,
+    // }
+    state.apologies.splice(index, 1, {
       apologyText: apology.apologyText,
       dateTime: apology.dateTime,
       id: apology.apologyId,
@@ -36,7 +45,10 @@ export const mutations = {
       userPhotoUrl: apology.userPhotoUrl,
       stars: apology.stars,
       updateDateTime: apology.updateDateTime,
-    }
+      color: apology.color,
+    })
+    console.log('changeApology?')
+    console.log(state)
   },
   clearApology(state) {
     state.apologies = []
@@ -140,11 +152,7 @@ export const actions = {
       )
       .then(function () {
         console.log('change')
-        commit(
-          'changeApology',
-          { ...params, updateDateTime },
-          params.index
-        )
+        commit('changeApology', { ...params, updateDateTime }, params.index)
       })
       .catch(function (error) {
         console.error('Error adding star: ', error)
