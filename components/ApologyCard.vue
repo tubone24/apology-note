@@ -26,17 +26,27 @@
 
         <v-spacer />
         <v-row align="center" justify="end">
-          <v-btn class="ma-2" text icon color="yellow lighten-2" :disabled="!canStar" @click="addStar">
-            <v-icon class="mr-1">mdi-star</v-icon>
+          <v-btn
+            v-if="!rerender"
+            class="ma-2"
+            text
+            icon
+            color="yellow lighten-2"
+            :disabled="!canStar"
+            @click="addStar"
+          >
+            <v-icon class="mr-0">mdi-star</v-icon>
           </v-btn>
-          <star-num v-if="!rerender" :index="index" />
+          <div class="subheading ml-n6">
+            <star-num v-if="!rerender" :index="index" />
+          </div>
         </v-row>
         <v-row align="center" justify="end">
           <v-icon class="mr-1">mdi-share-variant</v-icon>
         </v-row>
         <v-row align="center" justify="end">
           <v-icon class="mr-1">mdi-calendar-clock</v-icon>
-          <span class="subheading mr-2">{{
+          <span class="subheading mr-2" style="font-size: small;">{{
             this.$store.getters.getApologies[this.index].dateTime
           }}</span>
         </v-row>
