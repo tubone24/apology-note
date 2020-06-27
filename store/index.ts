@@ -10,6 +10,7 @@ export const state = () => ({
   userName: '',
   userPhotoUrl: '',
   apologies: [],
+  users: [],
 })
 
 export const mutations = {
@@ -28,15 +29,6 @@ export const mutations = {
   changeApology(state, apology, index) {
     console.log('chage apology')
     console.log(apology)
-    // state.apologies[index] = {
-    //   apologyText: apology.apologyText,
-    //   dateTime: apology.dateTime,
-    //   id: apology.apologyId,
-    //   user: apology.user,
-    //   userPhotoUrl: apology.userPhotoUrl,
-    //   stars: apology.stars,
-    //   updateDateTime: apology.updateDateTime,
-    // }
     state.apologies.splice(index, 1, {
       apologyText: apology.apologyText,
       dateTime: apology.dateTime,
@@ -47,11 +39,15 @@ export const mutations = {
       updateDateTime: apology.updateDateTime,
       color: apology.color,
     })
-    console.log('changeApology?')
-    console.log(state)
   },
   clearApology(state) {
     state.apologies = []
+  },
+  addUser(state, user) {
+    state.users.push(user)
+  },
+  clearUser(state) {
+    state.users = []
   },
 }
 
@@ -158,6 +154,22 @@ export const actions = {
         console.error('Error adding star: ', error)
       })
   },
+  fetchUsers({ commit }) {
+    commit('clearUser')
+    usersRef
+      .get()
+      .then((res) => {
+        res.forEach((doc) => {
+          console.log('success : ' + `${doc.id} => ${doc.data()}`)
+          const data = doc.data()
+          data.id = doc.id
+          commit('addUser', data)
+        })
+      })
+      .catch((error) => {
+        console.log('error : ' + error)
+      })
+  },
 }
 
 export const getters = {
@@ -173,5 +185,8 @@ export const getters = {
   getApologies(state) {
     console.log(state.apologies)
     return state.apologies
+  },
+  getUsers(state) {
+    return state.users
   },
 }

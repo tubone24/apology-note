@@ -62,6 +62,7 @@ export default {
   },
   created() {
     this.$store.dispatch('fetchApologies')
+    this.$store.dispatch('fetchUsers')
   },
   mounted() {
     this.$store.subscribeAction((action, state) => {

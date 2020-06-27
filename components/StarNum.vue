@@ -1,9 +1,20 @@
-<template>
-  <v-dialog
-    v-model="dialog"
-    width="500"
-  >
-  <span class="subheading mr-2">{{ stars }}</span>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+  <v-dialog v-model="dialog" width="500">
+<!--    <span class="subheading mr-2">{{ stars }}</span> いいね！-->
+    <v-card>
+      <v-card-title
+        class="headline grey lighten-2"
+        primary-title
+      >
+        {{ stars }} いいね！
+      </v-card-title>
+      <v-list-item-avatar size="30" color="grey darken-3">
+        <v-img
+          class="elevation-6"
+          :src="this.$store.getters.getApologies[this.index].userPhotoUrl"
+        ></v-img>
+      </v-list-item-avatar>
+    </v-card>
     <template v-slot:activator="{ on, attrs }">
       <v-btn
         text
@@ -14,7 +25,6 @@
       >
         {{ stars }}
       </v-btn>
-<!--      <span class="subheading mr-2">{{ stars }}</span>-->
     </template>
   </v-dialog>
 </template>
@@ -27,30 +37,19 @@ export default {
   data() {
     return {
       stars: 0,
+      userPhotos: [],
     }
   },
   created() {
     this.stars = this.$store.getters.getApologies[this.index].stars.length
-    console.log('starNum')
-    console.log(this.stars)
+    const starUserList = this.$store.getters.getApologies[this.index].stars
+    console.log('userList')
+    console.log(starUserList)
+    const userPhotos = []
+    for (const user in this.$store.getters.getUsers) {
+      userPhotos.push(user)
+    }
+    console.log(userPhotos)
   },
-  // computed: {
-  //   starnum() {
-  //     if (
-  //       this.$store.getters.getApologies[this.index].stars == null ||
-  //       this.$store.getters.getApologies[this.index].stars.length == null
-  //     ) {
-  //       return 0
-  //     }
-  //     return this.$store.getters.getApologies[this.index].stars.length
-  //   },
-  // },
-  // watch: {
-  //   starnum(values) {
-  //     this.$set(this, 'stars', values)
-  //     console.log('starNumwatch')
-  //     console.log(this.stars)
-  //   },
-  // },
 }
 </script>
